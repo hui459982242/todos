@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head >
+    <meta charset="UTF-8">
+    <title>Title</title>
+ 
+    <script type="text/javascript" src="js/vue.js"></script>
+    <link type="text/css" rel="stylesheet" href="css/list.css">
+</head>
+<body style="background-color: rgba(204,204,204,0.23)">
+ 
+ 
+<div class="fav_list">
+    <div data-v-357a65ed="" class="fav_list_box">
+        <div  class="fav_list_title">
+            <h3 class="fav_list_title_h3">我的收藏</h3>
+            <button @click="addLine">添加</button>
+            
+            <div class="fav_num">
+                共<span >{{list.length}}</span>条
+            </div>
+        </div>
+        <div class="fav_list_title" v-show="isAdd">
+            <input v-model="title"> <input v-model="date" placeholder="例：2022-06-17" > <input type="button" @click="saveLine()" value="确定">
+        </div>
+        <div  class="my_fav_con">
+            <div>
+                <ul  class="my_fav_list">
+                    <list-view v-for="(item, index) in list" :view="item" :index="index" :items="list" :key="item.id" class="my_fav_list_li" :id="item.id" ></list-view>
+                </ul> <!---->
+            </div>
+        </div>
+    </div>
+</div>
+ <script>
+    var app = new Vue({
+        el:".fav_list",
+        data:{
+            list:[
+                {"id":"1","title":"（电脑故障）1.电脑突然就找不到网络，上不了网 - qq_38959715的博客","date":"2019-04-08"},
+                {"id":"2","title":"（电脑故障）2.电脑突然就找不到网络，上不了网 - qq_38959715的博客","date":"2019-04-08"},
+                {"id":"3","title":"（电脑故障）3.电脑突然就找不到网络，上不了网 - qq_38959715的博客","date":"2019-04-08"},
+                {"id":"4","title":"（电脑故障）4.电脑突然就找不到网络，上不了网 - qq_38959715的博客","date":"2019-04-08"},
+                {"id":"5","title":"（电脑故障）5.电脑突然就找不到网络，上不了网 - qq_38959715的博客","date":"2019-04-08"}
+            ],
+            title:"",
+            date:"",
+            isAdd:false
+        },
+        methods:{
+            addLine(){
+                this.isAdd = true
+            },
+            saveLine(){
+                this.list.push({
+                    id: +new Date(),
+					title: this.title,
+					date: this.date
+                })
+                this.title = ""
+                this.date = ""
+                this.isAdd = false
+            }
+
+        },
+        components:{
+            'list-view': {
+                props: ['view', 'index', 'items'],
+                template:`<li class="my_fav_list_li" >
+                        <a  class="my_fav_list_a" href="" target="_blank">
+                            {{view.title}}
+                        </a>
+                        <label class="my_fav_list_label">
+                            <span >{{view.date}}</span>
+                            <a  class="cancel_fav" @click="delItem(view.id)"><em>取消</em></a>
+                        </label>
+                    </li>`,
+                methods:{
+                    delItem(id){
+                        const idx = this.items.findIndex(function(item){
+                            return item.id === id
+                        })
+                        // 删除操作
+                        this.items.splice(idx,1)
+                    }
+                }
+            }
+        }
+    })
+ </script>
+</body>
+</html>
